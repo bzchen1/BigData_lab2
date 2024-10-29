@@ -20,7 +20,9 @@ context.write(key, new Text(totalInflow + "," + totalOutflow));
 
 # Task 2: 星期交易量统计
 思路：先统计星期平均交易量，再降序排列。
+
 **job1:统计星期平均交易量**
+
 $Mapper:$拆解$Task1$的输出<日期，交易量>，将日期转化为weekday。输出<weekday,交易量>
 ```java
 // 处理时间--转化为weekday
@@ -44,8 +46,11 @@ for (Text value : values) {
 context.write(key, new Text(totalInflow/day_num+","+totalOutflow/day_num));	
 ```
 **job2:降序**
+
 $Mapper:$提取流入量。输出<流入量，<weekday,"流入量，流出量">>
+
 $Reducer:$输出$value$。即$job1$的输出形式。
+
 $DescendingLongWritableComparator：$实现降序排序。
 ```java
 @Override
@@ -58,7 +63,9 @@ public int compare(WritableComparable a, WritableComparable b) {
 
 # Task 3:⽤户活跃度分析
 思路：先统计用户活跃度，再降序排列。
+
 **job1:统计用户活跃度**
+
 $Mapper:$提取`csv`每行第$1$列的`user_id`，第$6$列的 `directPurchaseAmt` 和第$9$列 `total_redeem_amt` 。输出<用户id ， 活跃度 >。注意对空白的处理。
 ```java
 long active = 0; //active=1，用户活跃；active=0，用户不活跃
@@ -69,20 +76,33 @@ if ((!directPurchaseAmt.isEmpty() && !directPurchaseAmt.equals("0")) ||
 }
 ```
 $Reducer:$对每个用户id的活跃度累和。输出<用户id，活跃天数>
+
 **job2:降序**
+
 $Mapper:$交换$job1$输出的$key$和$value$。输出<活跃天数，用户id>
+
 $Reducer:$交换$key$和$value$。输出<用户id，活跃天数>
+
 $DescendingLongWritableComparator：$实现降序排序。和$Task2$的函数一样。
 
 # Task 4 : 交易⾏为影响因素分析 
 思路：对`mfd_bank_shibor.csv`的`Interest_O_N(隔日的利率)`进行统计，计算出每个`weekday`的平均利率，然后和`Task2`中每个`weekday`的平均流出量（交易金额）进行比较。 即研究平均利率和交易的影响。
+
 **job1:统计用户活跃度**
-$Mapper:$提取`csv`每行第$1$列的`mfd_date`，第$2$列的 `Interest_O_N` 。将`mdf_date`转化为weekday。输出<weekday,利率>
+
+$Mapper:$提取`csv`每行第$1$列的`mfd_date`，第$2$列的 `Interest_O_N` 。将`mdf_date`转化为
+weekday。输出<weekday,利率>
+
 $Reducer:$对每个`weekday`的利率累和，求平均。输出<`weekday`，平均利率>
+
 **job2:降序**
+
 $Mapper:$交换$job1$输出的$key$和$value$。输出<平均利率，`weekday`>
+
 $Reducer:$交换$key$和$value$。输出<`weekday`，平均利率>
+
 $DescendingLongWritableComparator：$实现降序排序。和$Task2$的函数一样。
+
 **输出结果：**
 ```java
 Saturday        3.6385
