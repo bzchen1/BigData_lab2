@@ -128,9 +128,14 @@ Saturday        148088068,112868942
 # 实验结果
 运行指令：
 ```
+//每⽇资⾦流⼊流出统计
 hadoop jar ./target/lab2-1.0-SNAPSHOT.jar com.example.DailyFundDriver  /hw/lab2/input/user_balance_table.csv  /hw/lab2/output1
+//星期的资金流量统计
 hadoop jar ./target/lab2-1.0-SNAPSHOT.jar com.example.WeekFundDriver  /hw/lab2/output1  /hw/lab2/output2
+//用户活跃度统计
 hadoop jar ./target/lab2-1.0-SNAPSHOT.jar com.example.UserActiveDayDriver  /hw/lab2/input/user_balance_table.csv  /hw/lab2/output3
+//星期的平均利率统计
+hadoop jar ./target/lab2-1.0-SNAPSHOT.jar com.example.WeekInterestDriver  /hw/lab2/input/mfd_bank_shibor.csv  /hw/lab2/output4
 ```
 结果放在 output 文件夹下
 
