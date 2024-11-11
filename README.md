@@ -88,7 +88,7 @@ if ((!directPurchaseAmt.isEmpty() && !directPurchaseAmt.equals("0")) ||
 # Task 4 : 交易⾏为影响因素分析 
 思路：对`mfd_bank_shibor.csv`的`Interest_O_N(隔日的利率)`进行统计，计算出每个`weekday`的平均利率，然后和`Task2`中每个`weekday`的平均流出量（交易金额）进行比较。 即研究平均利率和交易的影响。
 
-**job1:统计用户活跃度**
+**job1:统计每个weekday的利率**
 
  Mapper: 提取`csv`每行第 1 列的`mfd_date`，第 2 列的 `Interest_O_N` 。将`mdf_date`转化为
 weekday。输出<weekday,利率>
